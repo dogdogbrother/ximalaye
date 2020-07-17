@@ -6,21 +6,18 @@ import SnapCarousel, {
 } from 'react-native-snap-carousel';
 import {viewportWidth, wp, hp} from '@/utils/index';
 import {StyleSheet, View} from 'react-native';
-
-const data = [
-  'http://49.233.185.168/img/couver1.jpg',
-  'http://49.233.185.168/img/couver1.jpg',
-  'http://49.233.185.168/img/couver1.jpg',
-  'http://49.233.185.168/img/couver1.jpg',
-  'http://49.233.185.168/img/couver1.jpg',
-];
+import {ICarousel} from '@/models/home';
 
 const sliderWidth = viewportWidth;
 const sideWidth = wp(90);
 const sideHeight = hp(26);
 const itemWidth = sideWidth + wp(2) * 2;
 
-class Carousel extends React.Component {
+interface IProps {
+  data: ICarousel[];
+}
+
+class Carousel extends React.Component<IProps> {
   state = {
     activeSlide: 0,
   };
@@ -30,22 +27,23 @@ class Carousel extends React.Component {
     });
   };
   renderItem = (
-    {item}: {item: string},
+    {item}: {item: ICarousel},
     parallaxProps?: AdditionalParallaxProps,
   ) => {
     return (
       <ParallaxImage
-        source={{uri: item}}
+        source={{uri: item.image}}
         style={styles.image}
         containerStyle={styles.imageContainer}
         parallaxFactor={0.8}
-        showSpinner
         spinnerColor="rgba(0,0,0,0.25)"
         {...parallaxProps}
       />
     );
   };
   get pagination() {
+    const {data} = this.props;
+    // console.log(data);
     const {activeSlide} = this.state;
     return (
       <View style={styles.paginationWrapper}>
@@ -62,6 +60,7 @@ class Carousel extends React.Component {
     );
   }
   render() {
+    const {data} = this.props;
     return (
       <View>
         <SnapCarousel

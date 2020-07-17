@@ -2,7 +2,11 @@ import {create} from 'dva-core-ts';
 import createLoading from 'dva-loading-ts';
 import models from '@/models/index';
 
-const app = create();
+const app = create({
+  onError() {
+    // ...
+  },
+});
 models.forEach((model) => {
   app.model(model);
 });

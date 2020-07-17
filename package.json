@@ -16,6 +16,7 @@
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.6.2",
     "@types/react-redux": "^7.1.9",
+    "axios": "^0.19.2",
     "dva-core-ts": "^2.0.7",
     "dva-loading-ts": "^3.0.23",
     "react": "16.11.0",

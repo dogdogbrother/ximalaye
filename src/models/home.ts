@@ -1,43 +1,52 @@
 import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
-interface HomeState {
-  num: number;
+import axios from 'axios';
+
+const CAROUSEL_URL = '/mock/11/bear/carousel';
+
+export interface ICarousel {
+  id: string;
+  image: string;
+  colors: [string, string];
 }
+
+interface HomeState {
+  carousels: ICarousel[];
+}
+
 interface HomeModel extends Model {
   namespace: 'home';
   state: HomeState;
   reducers: {
-    add: Reducer<HomeState>;
+    setState: Reducer<HomeState>;
   };
   effects: {
-    asyncAdd: Effect;
+    fetchCarousels: Effect;
   };
 }
 const initialState = {
-  num: 0,
+  carousels: [],
 };
-function delay(timout: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, timout);
-  });
-}
+
 const homeModel: HomeModel = {
   namespace: 'home',
   state: initialState,
   reducers: {
-    add(state = initialState, {payload}) {
+    setState(state = initialState, {payload}) {
       return {
         ...state,
-        num: state.num + payload.num,
+        ...payload,
       };
     },
   },
   effects: {
-    *asyncAdd({payload}, {call, put}) {
-      yield call(delay, 3000);
+    *fetchCarousels(_, {call, put}) {
+      const {data} = yield call(axios.get, CAROUSEL_URL);
       yield put({
-        type: 'add',
-        payload,
+        type: 'setState',
+        payload: {
+          carousels: data.data,
+        },
       });
     },
   },
