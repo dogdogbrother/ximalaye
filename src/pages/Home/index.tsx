@@ -4,6 +4,8 @@ import {connect, ConnectedProps} from 'react-redux';
 import {RootStackNavigation} from '@/navigator/index';
 import {RootState} from '@/models/index';
 import Carousel from './Carousel';
+import Guess from './Guess';
+import {ScrollView} from 'react-native-gesture-handler';
 const mapStateToProps = ({home}: RootState) => ({
   carousels: home.carousels,
 });
@@ -26,9 +28,10 @@ class Home extends React.Component<IProps> {
   render() {
     const {carousels} = this.props;
     return (
-      <View>
+      <ScrollView>
         <Carousel data={carousels} />
-      </View>
+        <Guess />
+      </ScrollView>
     );
   }
 }

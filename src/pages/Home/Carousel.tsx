@@ -43,7 +43,6 @@ class Carousel extends React.Component<IProps> {
   };
   get pagination() {
     const {data} = this.props;
-    // console.log(data);
     const {activeSlide} = this.state;
     return (
       <View style={styles.paginationWrapper}>

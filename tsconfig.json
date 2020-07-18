@@ -41,7 +41,7 @@
     "paths": {
       "@/utils/*": ["utils/*"],
       "@/pages/*": ["pages/*"],
-      "@/component/*": ["component/*"],
+      "@/components/*": ["components/*"],
       "@/config/*": ["config/*"],
       "@/assets/*": ["assets/*"],
       "@/models/*": ["models/*"],
