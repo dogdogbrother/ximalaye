@@ -4,6 +4,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '@/models/index';
 import Icon from '@/assets/iconfont/index';
 import Touchable from '@/components/Touchable.tsx';
+import {IGUESS} from '@/models/home';
 const mapStateToProps = ({home}: RootState) => {
   return {
     guess: home.guess,
@@ -25,7 +26,7 @@ class Guess extends React.Component<ModelState> {
       type: 'home/fetchGuess',
     });
   };
-  renderItem = ({item}) => {
+  renderItem = ({item}: {item: IGUESS}) => {
     return (
       <View style={styles.item}>
         <Image source={{uri: item.image}} style={styles.image} />

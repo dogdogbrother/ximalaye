@@ -8,6 +8,9 @@ const CAROUSEL_URL = '/mock/11/bear/carousel';
 // 猜你喜欢
 const GUESS_URL = '/mock/11/bear/guess';
 
+// 首页列表
+const CHANNEL_URL = '/mock/11/bear/channel';
+
 export interface ICarousel {
   id: string;
   image: string;
@@ -20,9 +23,19 @@ export interface IGUESS {
   image: string;
 }
 
+export interface IChannel {
+  id: string;
+  title: string;
+  image: string;
+  remark: string;
+  played: number;
+  playing: number;
+}
+
 interface HomeState {
   carousels: ICarousel[];
   guess: IGUESS[];
+  channels: IChannel[];
 }
 
 interface HomeModel extends Model {
@@ -34,11 +47,13 @@ interface HomeModel extends Model {
   effects: {
     fetchCarousels: Effect;
     fetchGuess: Effect;
+    fetchChannels: Effect;
   };
 }
-const initialState = {
+const initialState: HomeState = {
   carousels: [],
   guess: [],
+  channels: [],
 };
 
 const homeModel: HomeModel = {
@@ -68,6 +83,15 @@ const homeModel: HomeModel = {
         type: 'setState',
         payload: {
           guess: data.data,
+        },
+      });
+    },
+    *fetchChannels(_, {call, put}) {
+      const {data} = yield call(axios.get, CHANNEL_URL);
+      yield put({
+        type: 'setState',
+        payload: {
+          channels: data.data.results,
         },
       });
     },

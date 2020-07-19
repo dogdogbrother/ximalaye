@@ -1,13 +1,15 @@
 import React from 'react';
-import {View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootStackNavigation} from '@/navigator/index';
 import {RootState} from '@/models/index';
 import Carousel from './Carousel';
 import Guess from './Guess';
-import {ScrollView} from 'react-native-gesture-handler';
+import {FlatList, ListRenderItemInfo, View} from 'react-native';
+import ChannelItem from './ChannelItem';
+import {IChannel} from '@/models/home';
 const mapStateToProps = ({home}: RootState) => ({
   carousels: home.carousels,
+  channels: home.channels,
 });
 
 const connector = connect(mapStateToProps);
@@ -24,14 +26,31 @@ class Home extends React.Component<IProps> {
     dispatch({
       type: 'home/fetchCarousels',
     });
+    dispatch({
+      type: 'home/fetchChannels',
+    });
   }
-  render() {
+
+  renderItem = ({item}: ListRenderItemInfo<IChannel>) => {
+    return <ChannelItem data={item} />;
+  };
+  get header() {
     const {carousels} = this.props;
     return (
-      <ScrollView>
+      <View>
         <Carousel data={carousels} />
         <Guess />
-      </ScrollView>
+      </View>
+    );
+  }
+  render() {
+    const {channels} = this.props;
+    return (
+      <FlatList
+        ListHeaderComponent={this.header}
+        data={channels}
+        renderItem={this.renderItem}
+      />
     );
   }
 }
