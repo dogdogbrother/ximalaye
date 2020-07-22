@@ -20,7 +20,7 @@ interface IProps extends MadelState {
   navigation: RootStackNavigation;
 }
 
-class Home extends React.Component<IProps> {
+class Home extends React.PureComponent<IProps> {
   componentDidMount() {
     const {dispatch} = this.props;
     dispatch({
@@ -30,9 +30,14 @@ class Home extends React.Component<IProps> {
       type: 'home/fetchChannels',
     });
   }
-
+  onPress = (data: IChannel) => {
+    console.log(data);
+  };
+  keyExtractor = (item: IChannel) => {
+    return item.id;
+  };
   renderItem = ({item}: ListRenderItemInfo<IChannel>) => {
-    return <ChannelItem data={item} />;
+    return <ChannelItem data={item} onPress={this.onPress} />;
   };
   get header() {
     const {carousels} = this.props;
@@ -50,6 +55,7 @@ class Home extends React.Component<IProps> {
         ListHeaderComponent={this.header}
         data={channels}
         renderItem={this.renderItem}
+        keyExtractor={this.keyExtractor}
       />
     );
   }

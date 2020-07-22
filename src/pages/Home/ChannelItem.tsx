@@ -2,36 +2,46 @@ import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {IChannel} from '@/models/home';
 import Icon from '@/assets/iconfont/index';
+import Touchable from '@/components/Touchable';
 
 interface IProps {
   data: IChannel;
+  onPress: (data: IChannel) => void;
 }
 
 class ChannelItem extends React.Component<IProps> {
+  onPress = () => {
+    const {onPress, data} = this.props;
+    if (typeof onPress === 'function') {
+      onPress(data);
+    }
+  };
   render() {
     const {data} = this.props;
     return (
-      <View style={styles.container}>
-        <Image source={{uri: data.image}} style={styles.image} />
-        <View style={styles.rightContainer}>
-          <Text style={styles.title} numberOfLines={1}>
-            {data.title}
-          </Text>
-          <Text style={styles.remark} numberOfLines={2}>
-            {data.remark}
-          </Text>
-          <View style={styles.bottom}>
-            <View style={styles.playedView}>
-              <Icon name="iconhome-fill" size={14} />
-              <Text style={styles.number}>{data.played}</Text>
-            </View>
-            <View style={styles.playingView}>
-              <Icon name="iconhome-fill" size={14} />
-              <Text style={styles.number}>{data.playing}</Text>
+      <Touchable onPress={this.onPress}>
+        <View style={styles.container}>
+          <Image source={{uri: data.image}} style={styles.image} />
+          <View style={styles.rightContainer}>
+            <Text style={styles.title} numberOfLines={1}>
+              {data.title}
+            </Text>
+            <Text style={styles.remark} numberOfLines={2}>
+              {data.remark}
+            </Text>
+            <View style={styles.bottom}>
+              <View style={styles.playedView}>
+                <Icon name="iconhome-fill" size={14} />
+                <Text style={styles.number}>{data.played}</Text>
+              </View>
+              <View style={styles.playingView}>
+                <Icon name="iconhome-fill" size={14} />
+                <Text style={styles.number}>{data.playing}</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </Touchable>
     );
   }
 }
