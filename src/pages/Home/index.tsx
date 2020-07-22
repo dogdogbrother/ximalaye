@@ -28,7 +28,14 @@ interface IProps extends MadelState {
   navigation: RootStackNavigation;
 }
 
-class Home extends React.PureComponent<IProps> {
+interface IState {
+  refreshing: boolean;
+}
+
+class Home extends React.PureComponent<IProps, IState> {
+  state = {
+    refreshing: false,
+  };
   componentDidMount() {
     const {dispatch} = this.props;
     dispatch({
@@ -54,6 +61,22 @@ class Home extends React.PureComponent<IProps> {
       type: 'home/fetchChannels',
       payload: {
         loadMore: true,
+      },
+    });
+  };
+  // 下拉刷新
+  onRefresh = () => {
+    // ..
+    this.setState({
+      refreshing: true,
+    });
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'home/fetchChannels',
+      callback: () => {
+        this.setState({
+          refreshing: false,
+        });
       },
     });
   };
@@ -100,6 +123,7 @@ class Home extends React.PureComponent<IProps> {
   }
   render() {
     const {channels} = this.props;
+    const {refreshing} = this.state;
     return (
       <FlatList
         ListHeaderComponent={this.header}
@@ -110,6 +134,8 @@ class Home extends React.PureComponent<IProps> {
         keyExtractor={this.keyExtractor}
         onEndReached={this.onEndReached}
         onEndReachedThreshold={0.2}
+        onRefresh={this.onRefresh}
+        refreshing={refreshing}
       />
     );
   }
