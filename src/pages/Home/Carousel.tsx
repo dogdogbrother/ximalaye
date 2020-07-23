@@ -12,7 +12,7 @@ import {RootState} from '@/models/index';
 
 const sliderWidth = viewportWidth;
 const sideWidth = wp(90);
-const sideHeight = hp(26);
+export const sideHeight = hp(26);
 const itemWidth = sideWidth + wp(2) * 2;
 
 const mapStateToProps = ({home}: RootState) => ({

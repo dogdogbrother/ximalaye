@@ -42,6 +42,7 @@ export interface IPagination {
 interface HomeState {
   carousels: ICarousel[];
   activeCarouselIndex: number;
+  gradientVisible: boolean;
   guess: IGUESS[];
   channels: IChannel[];
   pagination: IPagination;
@@ -62,6 +63,7 @@ interface HomeModel extends Model {
 const initialState: HomeState = {
   carousels: [],
   activeCarouselIndex: 0,
+  gradientVisible: true,
   guess: [],
   channels: [],
   pagination: {

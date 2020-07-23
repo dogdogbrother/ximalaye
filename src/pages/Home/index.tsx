@@ -2,7 +2,7 @@ import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootStackNavigation} from '@/navigator/index';
 import {RootState} from '@/models/index';
-import Carousel from './Carousel';
+import Carousel, {sideHeight} from './Carousel';
 import Guess from './Guess';
 import {
   FlatList,
@@ -10,6 +10,8 @@ import {
   View,
   Text,
   StyleSheet,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import ChannelItem from './ChannelItem';
 import {IChannel} from '@/models/home';
@@ -17,6 +19,7 @@ const mapStateToProps = ({home, loading}: RootState) => ({
   carousels: home.carousels,
   channels: home.channels,
   hasMore: home.pagination.hasMore,
+  gradientVisible: home.gradientVisible,
   loading: loading.effects['home/fetchChannels'],
 });
 
@@ -83,11 +86,26 @@ class Home extends React.PureComponent<IProps, IState> {
   renderItem = ({item}: ListRenderItemInfo<IChannel>) => {
     return <ChannelItem data={item} onPress={this.onPress} />;
   };
+  onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetY = nativeEvent.contentOffset.y;
+    let newGradientVisible = offsetY < sideHeight;
+    const {dispatch, gradientVisible} = this.props;
+    if (gradientVisible !== newGradientVisible) {
+      dispatch({
+        type: 'home/setState',
+        payload: {
+          gradientVisible: newGradientVisible,
+        },
+      });
+    }
+  };
   get header() {
     return (
       <View>
         <Carousel />
-        <Guess />
+        <View style={styles.background}>
+          <Guess />
+        </View>
       </View>
     );
   }
@@ -135,6 +153,7 @@ class Home extends React.PureComponent<IProps, IState> {
         onEndReachedThreshold={0.2}
         onRefresh={this.onRefresh}
         refreshing={refreshing}
+        onScroll={this.onScroll}
       />
     );
   }
@@ -152,6 +171,9 @@ const styles = StyleSheet.create({
   empty: {
     alignItems: 'center',
     paddingVertical: 10,
+  },
+  background: {
+    backgroundColor: '#fff',
   },
 });
 export default connector(Home);
