@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/material-top-tabs';
 import Home from '@/pages/Home';
 import TopTabBarWrapper from '@/pages/views/TopTabBarWrapper';
+import {StyleSheet} from 'react-native';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,6 +19,7 @@ class HomeTabs extends React.Component {
       <Tab.Navigator
         lazy
         tabBar={this.renderTabBar}
+        sceneContainerStyle={styles.sceneContainer}
         tabBarOptions={{
           scrollEnabled: true,
           tabStyle: {
@@ -43,4 +45,9 @@ class HomeTabs extends React.Component {
   }
 }
 
+const styles = StyleSheet.create({
+  sceneContainer: {
+    backgroundColor: 'transparent',
+  },
+});
 export default HomeTabs;
