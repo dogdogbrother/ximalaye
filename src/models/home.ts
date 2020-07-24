@@ -1,7 +1,7 @@
 import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
-import {RootState} from '.';
+import {RootState} from './index';
 
 // 轮播图
 const CAROUSEL_URL = '/mock/11/bear/carousel';
