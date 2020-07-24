@@ -72,7 +72,7 @@ const categoryModel: CategoryModel = {
         });
       }
     },
-    *toggle({payload}, {put, select}) {
+    *toggle(_, {put, select}) {
       const icategory = yield select(({category}: RootState) => category);
       yield put({
         type: 'setState',
