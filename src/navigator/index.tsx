@@ -9,7 +9,7 @@ import {
 import Home from './BottomTabs';
 import Detail from '@/pages/Detail';
 import Category from '@/pages/Category';
-import {Platform, StyleSheet} from 'react-native';
+import {Platform, StyleSheet, StatusBar} from 'react-native';
 
 export type RootStackParamList = {
   BottomTabs: {
@@ -36,6 +36,13 @@ class Navigator extends React.Component {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             gestureEnabled: true,
             gestureDirection: 'horizontal',
+            ...Platform.select({
+              android: {
+                headerStatusBarHeight: StatusBar.currentHeight,
+              },
+            }),
+            headerBackTitleVisible: false,
+            headerTintColor: '#333',
             headerStyle: {
               ...Platform.select({
                 android: {
