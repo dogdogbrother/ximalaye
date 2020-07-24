@@ -2,10 +2,11 @@ import {Model, Effect, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import storage, {load} from '@/config/storage';
 import axios from 'axios';
+import {StyleSheet} from 'react-native';
 
-const CATEGORY_URL = '/mock/11/bear/cateory';
+const CATEGORY_URL = '/mock/11/bear/category';
 
-interface ICategory {
+export interface ICategory {
   id: string;
   name: string;
   classify?: string;
@@ -82,9 +83,9 @@ const categoryModel: CategoryModel = {
       dispatch({type: 'loadData'});
     },
     asyncStorage() {
-      storage.sync.category = async () => {
+      storage.sync.categorys = async () => {
         const {data} = await axios.get(CATEGORY_URL);
-        return data;
+        return data.data;
       };
       storage.sync.myCategorys = async () => {
         return null;
