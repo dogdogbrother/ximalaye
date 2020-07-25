@@ -7,11 +7,13 @@ interface IProps {
   isEdit: boolean;
   selected: boolean;
   data: ICategory;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
-const parentWidth = viewportWidth - 10;
-const itemWidth = parentWidth / 4;
+export const parentWidth = viewportWidth - 10;
+export const itemWidth = parentWidth / 4;
+export const itemHeight = 48;
+export const margin = 5;
 
 class Item extends React.Component<IProps> {
   render() {
@@ -32,11 +34,11 @@ class Item extends React.Component<IProps> {
 }
 
 const styles = StyleSheet.create({
-  itemWrapper: {width: itemWidth, height: 48},
+  itemWrapper: {width: itemWidth, height: itemHeight},
   item: {
     flex: 1,
     backgroundColor: '#fff',
-    margin: 5,
+    margin: margin,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
