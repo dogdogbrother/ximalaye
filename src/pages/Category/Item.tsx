@@ -7,6 +7,7 @@ interface IProps {
   isEdit: boolean;
   selected: boolean;
   data: ICategory;
+  disabled: boolean;
 }
 
 const parentWidth = viewportWidth - 10;
@@ -14,12 +15,12 @@ const itemWidth = parentWidth / 4;
 
 class Item extends React.Component<IProps> {
   render() {
-    const {data, isEdit, selected} = this.props;
+    const {data, isEdit, selected, disabled} = this.props;
     return (
       <View key={data.id} style={styles.itemWrapper}>
-        <View style={styles.item}>
+        <View style={[styles.item, disabled && styles.disabled]}>
           <Text>{data.name}</Text>
-          {isEdit && (
+          {isEdit && !disabled && (
             <View style={styles.icon}>
               <Text style={styles.iconText}>{selected ? '-' : '+'}</Text>
             </View>
@@ -39,6 +40,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
+  },
+  disabled: {
+    backgroundColor: '#ccc',
   },
   icon: {
     position: 'absolute',
