@@ -5,7 +5,7 @@ import axios from 'axios';
 const ALBUM_URL = '/mock/11/bear/album/list';
 
 // 节目接口
-interface IProgram {
+export interface IProgram {
   id: string;
   title: string;
   playVolume: number;
@@ -59,7 +59,7 @@ const albumModel: AlbumModel = {
   effects: {
     *fetchAlbum({}, {call, put}) {
       const {data} = yield call(axios.get, ALBUM_URL);
-      console.log(data);
+      console.log(data.data.introduction);
       yield put({
         type: 'setState',
         payload: data.data,

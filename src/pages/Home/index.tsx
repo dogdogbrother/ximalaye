@@ -49,7 +49,6 @@ class Home extends React.PureComponent<IProps, IState> {
     });
   }
   goAlbum = (data: IChannel | IGUESS) => {
-    console.log(data);
     const {navigation} = this.props;
     navigation.navigate('Album', {item: data});
   };
