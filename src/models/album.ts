@@ -57,7 +57,7 @@ const albumModel: AlbumModel = {
   namespace: 'album',
   state: initialState,
   effects: {
-    *fetchAlbum({payload}, {call, put}) {
+    *fetchAlbum({}, {call, put}) {
       const {data} = yield call(axios.get, ALBUM_URL);
       yield put({
         type: 'setState',

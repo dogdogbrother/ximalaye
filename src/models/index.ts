@@ -8,7 +8,7 @@ const models = [home, category, album];
 export type RootState = {
   home: typeof home.state;
   category: typeof category.state;
-  album: typeof album;
+  album: typeof album.state;
   loading: DvaLoadingState;
 };
 

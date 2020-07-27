@@ -15,7 +15,11 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-class Guess extends React.Component<ModelState> {
+interface IProps extends ModelState {
+  goAlbum: (item: IGUESS) => void;
+}
+
+class Guess extends React.Component<IProps> {
   componentDidMount() {
     this.fetch();
   }
@@ -27,11 +31,16 @@ class Guess extends React.Component<ModelState> {
     });
   };
   renderItem = ({item}: {item: IGUESS}) => {
+    const {goAlbum} = this.props;
     return (
-      <View style={styles.item}>
+      <Touchable
+        style={styles.item}
+        onPress={() => {
+          goAlbum(item);
+        }}>
         <Image source={{uri: item.image}} style={styles.image} />
         <Text numberOfLines={2}>{item.title}</Text>
-      </View>
+      </Touchable>
     );
   };
   render() {

@@ -14,7 +14,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import ChannelItem from './ChannelItem';
-import {IChannel} from '@/models/home';
+import {IChannel, IGUESS} from '@/models/home';
 const mapStateToProps = ({home, loading}: RootState) => ({
   carousels: home.carousels,
   channels: home.channels,
@@ -48,8 +48,10 @@ class Home extends React.PureComponent<IProps, IState> {
       type: 'home/fetchChannels',
     });
   }
-  onPress = (data: IChannel) => {
+  goAlbum = (data: IChannel | IGUESS) => {
     console.log(data);
+    const {navigation} = this.props;
+    navigation.navigate('Album', {item: data});
   };
   keyExtractor = (item: IChannel) => {
     return item.id;
@@ -84,7 +86,7 @@ class Home extends React.PureComponent<IProps, IState> {
     });
   };
   renderItem = ({item}: ListRenderItemInfo<IChannel>) => {
-    return <ChannelItem data={item} onPress={this.onPress} />;
+    return <ChannelItem data={item} onPress={this.goAlbum} />;
   };
   onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = nativeEvent.contentOffset.y;
@@ -104,7 +106,7 @@ class Home extends React.PureComponent<IProps, IState> {
       <View>
         <Carousel />
         <View style={styles.background}>
-          <Guess />
+          <Guess goAlbum={this.goAlbum} />
         </View>
       </View>
     );
