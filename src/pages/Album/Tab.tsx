@@ -1,15 +1,23 @@
 import React from 'react';
 // import {View, Text} from 'react-native';
-import {TabView} from 'react-native-tab-view';
+import {TabView, SceneRendererProps, TabBar} from 'react-native-tab-view';
 import Introduction from './Introduction';
 import List from './List';
+import {StyleSheet, Platform} from 'react-native';
 
 interface IRoute {
   key: string;
   title: string;
 }
 
-class Tab extends React.Component {
+interface IState {
+  routes: IRoute[];
+  index: number;
+}
+
+interface IProps {}
+
+class Tab extends React.Component<IProps, IState> {
   state = {
     routes: [
       {key: 'introduction', title: '简介'},
@@ -31,15 +39,54 @@ class Tab extends React.Component {
     }
     return;
   };
+  renderTabBar = (props: SceneRendererProps & {navigationState: IState}) => {
+    return (
+      <TabBar
+        {...props}
+        scrollEnabled
+        tabStyle={styles.tabStyle}
+        labelStyle={styles.label}
+        style={styles.tabbar}
+        indicatorStyle={styles.indicator}
+      />
+    );
+  };
+
   render() {
     return (
       <TabView
         navigationState={this.state}
         onIndexChange={this.onIndexChange}
         renderScene={this.renderScene}
+        renderTabBar={this.renderTabBar}
       />
     );
   }
 }
+
+const styles = StyleSheet.create({
+  tabStyle: {
+    width: 80,
+  },
+  label: {
+    color: '#000',
+  },
+  tabbar: {
+    backgroundColor: '#fff',
+    ...Platform.select({
+      android: {
+        elevation: 0,
+        borderBottomColor: '#e3e3e3',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+      },
+    }),
+  },
+  indicator: {
+    backgroundColor: '#eb6d48',
+    borderLeftWidth: 20,
+    borderRightWidth: 20,
+    borderColor: '#fff',
+  },
+});
 
 export default Tab;
