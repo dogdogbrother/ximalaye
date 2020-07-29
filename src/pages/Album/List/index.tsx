@@ -21,8 +21,9 @@ type ModelState = ConnectedProps<typeof connector>;
 type IProps = ModelState & ITabProps;
 
 class List extends React.Component<IProps> {
-  onPress = (data: IProgram) => {
-    console.log(data);
+  onPress = (data: IProgram, index: number) => {
+    const {onItemPress} = this.props;
+    onItemPress(data, index);
   };
   keyExtractor = (item: IProgram) => item.id;
   renderItem = ({item, index}: ListRenderItemInfo<IProgram>) => {
