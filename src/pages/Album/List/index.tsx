@@ -1,9 +1,11 @@
 import React from 'react';
-import {Text, ListRenderItemInfo, FlatList, StyleSheet} from 'react-native';
+import {ListRenderItemInfo, FlatList, StyleSheet} from 'react-native';
 import {RootState} from '@/models/index';
 import {ConnectedProps, connect} from 'react-redux';
 import {IProgram} from '@/models/album';
 import Item from './Item';
+import {NativeViewGestureHandler} from 'react-native-gesture-handler';
+import {ITabProps} from '../Tab';
 
 const mapStateToprops = ({album}: RootState) => {
   return {
@@ -15,25 +17,30 @@ const connector = connect(mapStateToprops);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-// interface IProps extends ModelState {}
+type IProps = ModelState & ITabProps;
 
-class List extends React.Component<ModelState> {
+class List extends React.Component<IProps> {
   onPress = (data: IProgram) => {
-    // alert('节目');
+    console.log(data);
   };
   keyExtractor = (item: IProgram) => item.id;
   renderItem = ({item, index}: ListRenderItemInfo<IProgram>) => {
     return <Item data={item} index={index} onPress={this.onPress} />;
   };
   render() {
-    const {list} = this.props;
+    const {list, panRef, tapRef, nativeRef} = this.props;
     return (
-      <FlatList
-        style={styles.container}
-        data={list}
-        renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
-      />
+      <NativeViewGestureHandler
+        simultaneousHandlers={panRef}
+        ref={nativeRef}
+        waitFor={tapRef}>
+        <FlatList
+          style={styles.container}
+          data={list}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
+        />
+      </NativeViewGestureHandler>
     );
   }
 }

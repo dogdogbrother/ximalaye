@@ -12,9 +12,10 @@ import {
   PanGestureHandler,
   State,
   PanGestureHandlerStateChangeEvent,
+  TapGestureHandler,
+  NativeViewGestureHandler,
 } from 'react-native-gesture-handler';
-import {viewportHeight} from '@/utils/';
-// import Animated from 'react-native-reanimated';
+import {viewportHeight} from '@/utils/index';
 
 const mapStateToProps = ({album}: RootState) => {
   return {
@@ -36,6 +37,10 @@ const HEADER_HEIGHT = 260;
 const USE_NATIVE_DRIVER = true;
 
 class Album extends React.Component<IProps> {
+  panRef = React.createRef<PanGestureHandler>();
+  tapRef = React.createRef<TapGestureHandler>();
+  nativeRef = React.createRef<NativeViewGestureHandler>();
+
   RANGE = [-(HEADER_HEIGHT - this.props.headerHeight), 0];
   translationY = new Animated.Value(0);
   translationYValue = 0;
@@ -125,30 +130,40 @@ class Album extends React.Component<IProps> {
     // const {headerHeight, summary, author, route} = this.props;
     // const {title, image} = route.params.item;
     return (
-      <PanGestureHandler
-        onGestureEvent={this.onGestureEvent}
-        onHandlerStateChange={this.onHandlerStateChange}>
-        <Animated.View
-          style={[
-            styles.container,
-            {
-              transform: [
+      <TapGestureHandler ref={this.tapRef}>
+        <View style={styles.container}>
+          <PanGestureHandler
+            ref={this.panRef}
+            simultaneousHandlers={[this.tapRef, this.nativeRef]}
+            onGestureEvent={this.onGestureEvent}
+            onHandlerStateChange={this.onHandlerStateChange}>
+            <Animated.View
+              style={[
+                styles.container,
                 {
-                  translateY: this.translateY.interpolate({
-                    inputRange: this.RANGE,
-                    outputRange: this.RANGE,
-                    extrapolate: 'clamp',
-                  }),
+                  transform: [
+                    {
+                      translateY: this.translateY.interpolate({
+                        inputRange: this.RANGE,
+                        outputRange: this.RANGE,
+                        extrapolate: 'clamp',
+                      }),
+                    },
+                  ],
                 },
-              ],
-            },
-          ]}>
-          {this.renderHeader()}
-          <View style={{height: viewportHeight - this.props.headerHeight}}>
-            <Tab />
-          </View>
-        </Animated.View>
-      </PanGestureHandler>
+              ]}>
+              {this.renderHeader()}
+              <View style={{height: viewportHeight - this.props.headerHeight}}>
+                <Tab
+                  panRef={this.panRef}
+                  tapRef={this.tapRef}
+                  nativeRef={this.nativeRef}
+                />
+              </View>
+            </Animated.View>
+          </PanGestureHandler>
+        </View>
+      </TapGestureHandler>
     );
   }
 }

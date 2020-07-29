@@ -4,6 +4,11 @@ import {TabView, SceneRendererProps, TabBar} from 'react-native-tab-view';
 import Introduction from './Introduction';
 import List from './List';
 import {StyleSheet, Platform} from 'react-native';
+import {
+  PanGestureHandler,
+  TapGestureHandler,
+  NativeViewGestureHandler,
+} from 'react-native-gesture-handler';
 
 interface IRoute {
   key: string;
@@ -15,9 +20,13 @@ interface IState {
   index: number;
 }
 
-interface IProps {}
+export interface ITabProps {
+  panRef: React.RefObject<PanGestureHandler>;
+  tapRef: React.RefObject<TapGestureHandler>;
+  nativeRef: React.RefObject<NativeViewGestureHandler>;
+}
 
-class Tab extends React.Component<IProps, IState> {
+class Tab extends React.Component<ITabProps, IState> {
   state = {
     routes: [
       {key: 'introduction', title: '简介'},
@@ -31,11 +40,12 @@ class Tab extends React.Component<IProps, IState> {
     });
   };
   renderScene = ({route}: {route: IRoute}) => {
+    const {panRef, tapRef, nativeRef} = this.props;
     switch (route.key) {
       case 'introduction':
         return <Introduction />;
       case 'albums':
-        return <List />;
+        return <List panRef={panRef} tapRef={tapRef} nativeRef={nativeRef} />;
     }
     return;
   };
