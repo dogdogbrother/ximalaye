@@ -1,11 +1,12 @@
 import React from 'react';
-import {ListRenderItemInfo, FlatList, StyleSheet} from 'react-native';
+import {ListRenderItemInfo, Animated, StyleSheet} from 'react-native';
 import {RootState} from '@/models/index';
 import {ConnectedProps, connect} from 'react-redux';
 import {IProgram} from '@/models/album';
 import Item from './Item';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 import {ITabProps} from '../Tab';
+// import Animated from 'react-native-reanimated';
 
 const mapStateToprops = ({album}: RootState) => {
   return {
@@ -28,17 +29,20 @@ class List extends React.Component<IProps> {
     return <Item data={item} index={index} onPress={this.onPress} />;
   };
   render() {
-    const {list, panRef, tapRef, nativeRef} = this.props;
+    const {list, panRef, tapRef, nativeRef, onScrollDrag} = this.props;
     return (
       <NativeViewGestureHandler
         simultaneousHandlers={panRef}
         ref={nativeRef}
         waitFor={tapRef}>
-        <FlatList
+        <Animated.FlatList
           style={styles.container}
+          bounces={false}
           data={list}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
+          onScrollBeginDrag={onScrollDrag}
+          onScrollEndDrag={onScrollDrag}
         />
       </NativeViewGestureHandler>
     );

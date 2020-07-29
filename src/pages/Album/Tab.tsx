@@ -3,7 +3,12 @@ import React from 'react';
 import {TabView, SceneRendererProps, TabBar} from 'react-native-tab-view';
 import Introduction from './Introduction';
 import List from './List';
-import {StyleSheet, Platform} from 'react-native';
+import {
+  StyleSheet,
+  Platform,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native';
 import {
   PanGestureHandler,
   TapGestureHandler,
@@ -24,6 +29,7 @@ export interface ITabProps {
   panRef: React.RefObject<PanGestureHandler>;
   tapRef: React.RefObject<TapGestureHandler>;
   nativeRef: React.RefObject<NativeViewGestureHandler>;
+  onScrollDrag: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }
 
 class Tab extends React.Component<ITabProps, IState> {
@@ -40,12 +46,19 @@ class Tab extends React.Component<ITabProps, IState> {
     });
   };
   renderScene = ({route}: {route: IRoute}) => {
-    const {panRef, tapRef, nativeRef} = this.props;
+    const {panRef, tapRef, nativeRef, onScrollDrag} = this.props;
     switch (route.key) {
       case 'introduction':
         return <Introduction />;
       case 'albums':
-        return <List panRef={panRef} tapRef={tapRef} nativeRef={nativeRef} />;
+        return (
+          <List
+            panRef={panRef}
+            tapRef={tapRef}
+            nativeRef={nativeRef}
+            onScrollDrag={onScrollDrag}
+          />
+        );
     }
     return;
   };
