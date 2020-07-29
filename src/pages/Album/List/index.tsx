@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  ListRenderItemInfo,
-  FlatList,
-  Alert,
-  StyleSheet,
-} from 'react-native';
+import {Text, ListRenderItemInfo, FlatList, StyleSheet} from 'react-native';
 import {RootState} from '@/models/index';
 import {ConnectedProps, connect} from 'react-redux';
 import {IProgram} from '@/models/album';
@@ -25,7 +19,7 @@ type ModelState = ConnectedProps<typeof connector>;
 
 class List extends React.Component<ModelState> {
   onPress = (data: IProgram) => {
-    alert('节目');
+    // alert('节目');
   };
   keyExtractor = (item: IProgram) => item.id;
   renderItem = ({item, index}: ListRenderItemInfo<IProgram>) => {
