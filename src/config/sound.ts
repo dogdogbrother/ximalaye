@@ -56,3 +56,13 @@ const getCurrentTime = () => {
     }
   });
 };
+
+// 获取音频时长
+const getDuration = () => {
+  if (sound) {
+    return sound.getDuration();
+  }
+  return 0;
+};
+
+export {init, play, pause, getCurrentTime, getDuration};
