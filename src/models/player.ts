@@ -45,15 +45,15 @@ const playerModel: PlayerModel = {
       const {data} = yield call(axios.get, SHOW_URL, {
         params: {id: payload.id},
       });
-      console.log(data);
+
       yield put({
         type: 'setState',
         payload: {
-          id: data.id,
-          soundUrl: data.soundUrl,
+          id: data.data.id,
+          soundUrl: data.data.soundUrl,
         },
       });
-      yield call(init, data.soundUrl);
+      yield call(init, data.data.soundUrl);
       yield put({
         type: 'play',
       });

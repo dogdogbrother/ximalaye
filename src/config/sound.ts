@@ -5,8 +5,10 @@ Sound.setCategory('Playback');
 let sound: Sound;
 
 const init = (url: string) => {
+  console.log(url);
+
   return new Promise((resolve, reject) => {
-    sound = new Sound(url, (error) => {
+    sound = new Sound(url, '', (error) => {
       if (error) {
         reject(error);
       } else {
@@ -28,8 +30,9 @@ const play = () => {
         // 释放资源
         sound.release();
       });
+    } else {
+      reject();
     }
-    reject();
   });
 };
 
