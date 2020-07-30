@@ -5,6 +5,9 @@ axios.defaults.baseURL = Config.API_URL;
 
 axios.interceptors.request.use(
   function (config) {
+    config.headers = {
+      icode: 'DD52DC3FBE23472B',
+    };
     return config;
   },
 

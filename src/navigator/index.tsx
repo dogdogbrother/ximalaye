@@ -5,12 +5,14 @@ import {
   StackNavigationProp,
   HeaderStyleInterpolators,
   CardStyleInterpolators,
+  TransitionPresets,
 } from '@react-navigation/stack';
 import Home from './BottomTabs';
 import Detail from '@/pages/Detail';
 import Category from '@/pages/Category';
 import Album from '@/pages/Album';
 import {Platform, StyleSheet, StatusBar, Animated} from 'react-native';
+import Icon from '@/assets/iconfont/index';
 
 export type RootStackParamList = {
   BottomTabs: {
@@ -25,6 +27,7 @@ export type RootStackParamList = {
     };
     opacity?: Animated.Value;
   };
+  Detail: undefined;
 };
 
 export type RootStackNavigation = StackNavigationProp<RootStackParamList>;
@@ -57,6 +60,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     opacity: 0,
+  },
+  headerBackImage: {
+    marginHorizontal: Platform.OS === 'android' ? 0 : 8,
   },
 });
 
@@ -112,13 +118,38 @@ export type ModalStackNavigation = StackNavigationProp<ModalStackParamList>;
 
 function ModalStackScreen() {
   return (
-    <ModalStack.Navigator mode="modal" headerMode="screen">
+    <ModalStack.Navigator
+      mode="modal"
+      headerMode="screen"
+      screenOptions={{
+        headerTitleAlign: 'center',
+        gestureEnabled: true,
+        ...TransitionPresets.ModalSlideFromBottomIOS,
+        headerBackTitleVisible: false,
+      }}>
       <ModalStack.Screen
         name="Root"
         component={RootStackScreen}
         options={{headerShown: false}}
       />
-      <ModalStack.Screen name="Detail" component={Detail} />
+      <ModalStack.Screen
+        name="Detail"
+        component={Detail}
+        options={{
+          headerTintColor: '#fff',
+          headerTitle: '',
+          headerTransparent: true,
+          cardStyle: {backgroundColor: '#807c66'},
+          headerBackImage: ({tintColor}) => (
+            <Icon
+              name="iconhome-fill"
+              size={30}
+              color={tintColor}
+              style={styles.headerBackImage}
+            />
+          ),
+        }}
+      />
     </ModalStack.Navigator>
   );
 }

@@ -7,11 +7,9 @@ interface IProps {
 }
 class Detail extends React.Component<IProps> {
   render() {
-    const {route} = this.props;
     return (
       <View>
         <Text>Detail</Text>
-        <Text>{route.params.id}</Text>
       </View>
     );
   }

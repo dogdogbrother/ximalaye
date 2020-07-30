@@ -13,7 +13,7 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
 import {RouteProp} from '@react-navigation/native';
-import {RootStackParamList, RootStackNavigation} from '@/navigator/index';
+import {RootStackParamList, ModalStackNavigation} from '@/navigator/index';
 import coverRight from '@/assets/cover-right.png';
 import Tab from './Tab';
 import {
@@ -24,6 +24,7 @@ import {
   NativeViewGestureHandler,
 } from 'react-native-gesture-handler';
 import {viewportHeight} from '@/utils/index';
+import {IProgram} from '@/models/album';
 
 const mapStateToProps = ({album}: RootState) => {
   return {
@@ -39,7 +40,7 @@ type ModelState = ConnectedProps<typeof connector>;
 interface IProps extends ModelState {
   headerHeight: number;
   route: RouteProp<RootStackParamList, 'Album'>;
-  navigation: RootStackNavigation;
+  navigation: ModalStackNavigation;
 }
 
 const HEADER_HEIGHT = 260;
@@ -80,6 +81,11 @@ class Album extends React.Component<IProps> {
       }),
     });
   }
+
+  onItemPress = (data: IProgram, index: number) => {
+    const {navigation} = this.props;
+    navigation.navigate('Detail');
+  };
 
   onScrollDrag = Animated.event(
     [
@@ -209,6 +215,7 @@ class Album extends React.Component<IProps> {
                   tapRef={this.tapRef}
                   nativeRef={this.nativeRef}
                   onScrollDrag={this.onScrollDrag}
+                  onItemPress={this.onItemPress}
                 />
               </View>
             </Animated.View>
