@@ -1,13 +1,14 @@
 import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
-import {play} from '@/config/sound';
+import {play, init} from '@/config/sound';
 
 const SHOW_URL = '/mock/11/bear/show';
 
 export interface PlayerModelState {
   id: string;
   soundUrl: string;
+  playState: string;
 }
 
 export interface PlayerModel extends Model {
@@ -25,6 +26,7 @@ export interface PlayerModel extends Model {
 const initialState: PlayerModelState = {
   id: '',
   soundUrl: '',
+  playState: '',
 };
 
 const playerModel: PlayerModel = {
@@ -51,9 +53,27 @@ const playerModel: PlayerModel = {
           soundUrl: data.soundUrl,
         },
       });
+      yield call(init, data.soundUrl);
+      yield put({
+        type: 'play',
+      });
     },
     *play({payload}, {call, put}) {
+      yield put({
+        type: 'setState',
+        payload: {
+          playState: 'playing',
+        },
+      });
       yield call(play);
+      yield put({
+        type: 'setState',
+        payload: {
+          playState: 'paused',
+        },
+      });
     },
   },
 };
+
+export default playerModel;
