@@ -1,7 +1,7 @@
-import {Model, Effect, EffectWithType} from 'dva-core-ts';
+import {Model, Effect, EffectWithType, EffectsCommandMap} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
-import {play, init, pause} from '@/config/sound';
+import {play, init, pause, getCurrentTime, getDuration} from '@/config/sound';
 
 const SHOW_URL = '/mock/11/bear/show';
 
@@ -9,6 +9,8 @@ export interface PlayerModelState {
   id: string;
   soundUrl: string;
   playState: string;
+  currentTime: number;
+  duration: number;
 }
 
 export interface PlayerModel extends Model {
@@ -29,9 +31,25 @@ const initialState: PlayerModelState = {
   id: '',
   soundUrl: '',
   playState: '',
+  currentTime: 0,
+  duration: 0,
 };
 
-function* getCurrentTime() {}
+const delay = (timeOut: number) =>
+  new Promise((resolve) => setTimeout(resolve, timeOut));
+
+function* currentTimeFn({call, put}: EffectsCommandMap) {
+  while (true) {
+    yield call(delay, 1000);
+    const currentTime = yield call(getCurrentTime);
+    yield put({
+      type: 'setState',
+      payload: {
+        currentTime,
+      },
+    });
+  }
+}
 
 const playerModel: PlayerModel = {
   namespace: 'player',
@@ -49,15 +67,16 @@ const playerModel: PlayerModel = {
       const {data} = yield call(axios.get, SHOW_URL, {
         params: {id: payload.id},
       });
-
+      yield call(init, data.data.soundUrl);
       yield put({
         type: 'setState',
         payload: {
           id: data.data.id,
           soundUrl: data.data.soundUrl,
+          duration: getDuration(),
         },
       });
-      yield call(init, data.data.soundUrl);
+
       yield put({
         type: 'play',
       });
@@ -91,7 +110,7 @@ const playerModel: PlayerModel = {
         const {call, take, race} = sagaEffects;
         while (true) {
           yield take('play');
-          yield race([call(), take('pause')]);
+          yield race([call(currentTimeFn, sagaEffects), take('pause')]);
         }
       },
       {type: 'watcher'},
