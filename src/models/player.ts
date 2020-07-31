@@ -1,7 +1,7 @@
-import {Model, Effect} from 'dva-core-ts';
+import {Model, Effect, EffectWithType} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
-import {play, init} from '@/config/sound';
+import {play, init, pause} from '@/config/sound';
 
 const SHOW_URL = '/mock/11/bear/show';
 
@@ -20,6 +20,8 @@ export interface PlayerModel extends Model {
   effects: {
     fetchShow: Effect;
     play: Effect;
+    pause: Effect;
+    watcherCurrentTime: EffectWithType;
   };
 }
 
@@ -28,6 +30,8 @@ const initialState: PlayerModelState = {
   soundUrl: '',
   playState: '',
 };
+
+function* getCurrentTime() {}
 
 const playerModel: PlayerModel = {
   namespace: 'player',
@@ -58,7 +62,7 @@ const playerModel: PlayerModel = {
         type: 'play',
       });
     },
-    *play({payload}, {call, put}) {
+    *play(_, {call, put}) {
       yield put({
         type: 'setState',
         payload: {
@@ -73,6 +77,25 @@ const playerModel: PlayerModel = {
         },
       });
     },
+    *pause(_, {call, put}) {
+      yield call(pause);
+      yield put({
+        type: 'setState',
+        payload: {
+          playState: 'paused',
+        },
+      });
+    },
+    watcherCurrentTime: [
+      function* (sagaEffects) {
+        const {call, take, race} = sagaEffects;
+        while (true) {
+          yield take('play');
+          yield race([call(), take('pause')]);
+        }
+      },
+      {type: 'watcher'},
+    ],
   },
 };
 
