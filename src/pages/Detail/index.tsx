@@ -41,21 +41,31 @@ class Detail extends React.Component<IProps> {
     });
   };
 
+  previous = () => {};
+
   render() {
     const {playState} = this.props;
     return (
       <View style={styles.container}>
         <Text>Detail</Text>
         <PlaySlider />
-        <Touchable onPress={this.toggle}>
-          <Icon
-            name={
-              playState === 'playing' ? 'iconhome-fill' : 'iconfavorites-fill'
-            }
-            size={40}
-            color="#fff"
-          />
-        </Touchable>
+        <View>
+          <Touchable onPress={this.previous}>
+            <Icon name="iconlisting-content-fill" size={30} color="#fff" />
+          </Touchable>
+          <Touchable onPress={this.toggle}>
+            <Icon
+              name={
+                playState === 'playing' ? 'iconhome-fill' : 'iconfavorites-fill'
+              }
+              size={40}
+              color="#fff"
+            />
+          </Touchable>
+          <Touchable>
+            <Icon name="iconlisting-content-fill" size={30} color="#fff" />
+          </Touchable>
+        </View>
       </View>
     );
   }

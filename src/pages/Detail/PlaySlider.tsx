@@ -4,7 +4,7 @@ import Sloder from 'react-native-slider-x';
 
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
-import {formatTime} from '@/utils/';
+import {formatTime} from '@/utils/index';
 
 const mapStateToProps = ({player}: RootState) => {
   return {

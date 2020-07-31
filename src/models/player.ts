@@ -1,7 +1,15 @@
 import {Model, Effect, EffectWithType, EffectsCommandMap} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
-import {play, init, pause, getCurrentTime, getDuration} from '@/config/sound';
+import {
+  play,
+  init,
+  pause,
+  getCurrentTime,
+  getDuration,
+  stop,
+} from '@/config/sound';
+import {RootState} from '@/models/index';
 
 const SHOW_URL = '/mock/11/bear/show';
 
@@ -11,6 +19,9 @@ export interface PlayerModelState {
   playState: string;
   currentTime: number;
   duration: number;
+  previousId: string;
+  nextId: string;
+  sounds: {id: string; title: string}[];
 }
 
 export interface PlayerModel extends Model {
@@ -24,6 +35,8 @@ export interface PlayerModel extends Model {
     play: Effect;
     pause: Effect;
     watcherCurrentTime: EffectWithType;
+    previous: Effect;
+    next: Effect;
   };
 }
 
@@ -33,6 +46,9 @@ const initialState: PlayerModelState = {
   playState: '',
   currentTime: 0,
   duration: 0,
+  previousId: '',
+  nextId: '',
+  sounds: [],
 };
 
 const delay = (timeOut: number) =>
@@ -71,7 +87,7 @@ const playerModel: PlayerModel = {
       yield put({
         type: 'setState',
         payload: {
-          id: data.data.id,
+          id: payload.id,
           soundUrl: data.data.soundUrl,
           duration: getDuration(),
         },
@@ -115,6 +131,58 @@ const playerModel: PlayerModel = {
       },
       {type: 'watcher'},
     ],
+    *previous(_, {call, put, select}) {
+      yield call(stop);
+      const {id, sounds}: PlayerModelState = yield select(
+        ({player}: RootState) => player,
+      );
+      const index = sounds.findIndex((item) => item.id === id);
+      const currentIndex = index - 1;
+      const currentItem = sounds[currentIndex];
+      const previousItem = sounds[currentIndex - 1];
+      yield put({
+        type: 'setState',
+        payload: {
+          playState: 'paused',
+          id: currentItem.id,
+          title: currentItem.title,
+          previousId: previousItem ? previousItem.id : '',
+          nextId: id,
+        },
+      });
+      yield put({
+        type: 'fetchShow',
+        payload: {
+          id: currentItem.id,
+        },
+      });
+    },
+    *next(_, {call, put, select}) {
+      yield call(stop);
+      const {id, sounds}: PlayerModelState = yield select(
+        ({player}: RootState) => player,
+      );
+      const index = sounds.findIndex((item) => item.id === id);
+      const currentIndex = index + 1;
+      const currentItem = sounds[currentIndex];
+      const nextItem = sounds[currentIndex + 1];
+      yield put({
+        type: 'setState',
+        payload: {
+          playState: 'paused',
+          id: currentItem.id,
+          title: currentItem.title,
+          previousId: id,
+          nextId: nextItem ? nextItem.id : '',
+        },
+      });
+      yield put({
+        type: 'fetchShow',
+        payload: {
+          id: currentItem.id,
+        },
+      });
+    },
   },
 };
 
