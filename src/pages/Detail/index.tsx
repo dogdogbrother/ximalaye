@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Animated, Text} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {ModalStackParamList, ModalStackNavigation} from '@/navigator/index';
 import {RootState} from '@/models/index';
@@ -7,12 +7,15 @@ import {connect, ConnectedProps} from 'react-redux';
 import Touchable from '@/components/Touchable';
 import Icon from '@/assets/iconfont/index';
 import PlaySlider from './PlaySlider';
+import {viewportWidth} from '@/utils/index';
+import LinearGradient from 'react-native-linear-gradient';
 
 const mapStateToProps = ({player}: RootState) => {
   return {
     soundUrl: player.soundUrl,
     playState: player.playState,
     title: player.title,
+    thumbnailUrl: player.thumbnailUrl,
     previousId: player.previousId,
     nextId: player.nextId,
   };
@@ -27,7 +30,18 @@ interface IProps extends ModelState {
   route: RouteProp<ModalStackParamList, 'Detail'>;
 }
 
-class Detail extends React.Component<IProps> {
+interface IState {
+  barrage: boolean;
+}
+
+const IMAGE_WIDRH = 180;
+const SCALE = viewportWidth / IMAGE_WIDRH;
+
+class Detail extends React.Component<IProps, IState> {
+  state = {
+    barrage: false,
+  };
+  anim = new Animated.Value(1);
   componentDidMount() {
     const {dispatch, route, navigation, title} = this.props;
     dispatch({
@@ -70,10 +84,37 @@ class Detail extends React.Component<IProps> {
     });
   };
 
+  barrage = () => {
+    this.setState({
+      barrage: !this.state.barrage,
+    });
+    Animated.timing(this.anim, {
+      toValue: this.state.barrage ? 1 : SCALE,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+  };
+
   render() {
-    const {playState, previousId, nextId} = this.props;
+    const {barrage} = this.state;
+    const {playState, previousId, nextId, thumbnailUrl} = this.props;
     return (
       <View style={styles.container}>
+        <View style={styles.imageView}>
+          <Animated.Image
+            source={{uri: thumbnailUrl}}
+            style={[styles.image, {transform: [{scale: this.anim}]}]}
+          />
+        </View>
+        {barrage && (
+          <LinearGradient
+            colors={['rgba(128,104,102,0.5)', '#807c66']}
+            style={styles.linear}
+          />
+        )}
+        <Touchable style={styles.barrageBtn} onPress={this.barrage}>
+          <Text style={styles.barrageText}>弹幕</Text>
+        </Touchable>
         <PlaySlider />
         <View style={styles.control}>
           <Touchable
@@ -103,9 +144,11 @@ class Detail extends React.Component<IProps> {
   }
 }
 
+const PADDING_TOP = (viewportWidth - IMAGE_WIDRH) / 2;
+
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 100,
+    paddingTop: PADDING_TOP,
   },
   control: {
     flexDirection: 'row',
@@ -116,6 +159,35 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 10,
+  },
+  imageView: {
+    alignItems: 'center',
+    height: IMAGE_WIDRH,
+  },
+  image: {
+    width: IMAGE_WIDRH,
+    height: IMAGE_WIDRH,
+    borderRadius: 8,
+    backgroundColor: '#ccc',
+  },
+  barrageBtn: {
+    height: 20,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderColor: '#fff',
+    borderWidth: 1,
+    marginLeft: 10,
+  },
+  barrageText: {
+    color: '#fff',
+  },
+  linear: {
+    position: 'absolute',
+    top: 0,
+    height: viewportWidth,
+    width: viewportWidth,
   },
 });
 

@@ -16,7 +16,6 @@ type ModelState = ConnectedProps<typeof connector>;
 class Introduction extends React.Component<ModelState> {
   render() {
     const {introduction} = this.props;
-    console.log(introduction);
     return (
       <View style={styles.container}>
         <Text>{introduction}</Text>
