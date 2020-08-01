@@ -9,7 +9,7 @@ import Icon from '@/assets/iconfont/index';
 import PlaySlider from './PlaySlider';
 import {viewportWidth} from '@/utils/index';
 import LinearGradient from 'react-native-linear-gradient';
-import Barrage from '@/components/Barrage';
+import Barrage, {Message} from '@/components/Barrage';
 
 const data: string[] = [
   '我是弹幕11111',
@@ -50,11 +50,6 @@ interface IProps extends ModelState {
   route: RouteProp<ModalStackParamList, 'Detail'>;
 }
 
-interface Message {
-  id: number;
-  title: string;
-}
-
 interface IState {
   barrage: boolean;
   barrageData: Message[];
@@ -93,7 +88,7 @@ class Detail extends React.Component<IProps, IState> {
 
   addBarrage = () => {
     setInterval(() => {
-      const {barrage, barrageData} = this.state;
+      const {barrage} = this.state;
       if (barrage) {
         const id = Date.now();
         const title = getText();
@@ -101,7 +96,7 @@ class Detail extends React.Component<IProps, IState> {
           barrageData: [{id, title}],
         });
       }
-    });
+    }, 1000);
   };
 
   toggle = () => {
