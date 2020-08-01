@@ -5,8 +5,6 @@ Sound.setCategory('Playback');
 let sound: Sound;
 
 const init = (url: string) => {
-  console.log(url);
-
   return new Promise((resolve, reject) => {
     sound = new Sound(url, '', (error) => {
       if (error) {
