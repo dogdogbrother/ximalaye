@@ -8,10 +8,13 @@ import Account from '@/pages/Account';
 import {RootStackNavigation, RootStackParamList} from './index';
 import {RouteProp, TabNavigationState} from '@react-navigation/native';
 import Icon from '@/assets/iconfont/index';
+// import {View} from 'react-native';
+import Play from '@/pages/views/Play';
 
 export type BottomTabParamList = {
   HomeTabs: undefined;
   Listen: undefined;
+  Play: undefined;
   Found: undefined;
   Account: undefined;
 };
@@ -91,6 +94,15 @@ class BottomTabs extends React.Component<IProps> {
             tabBarIcon: ({color, size}) => (
               <Icon name="iconhome-fill" size={size} color={color} />
             ),
+          }}
+        />
+        <Tab.Screen
+          name="Play"
+          component={Play}
+          options={{
+            tabBarButton: () => {
+              return <Play />;
+            },
           }}
         />
         <Tab.Screen
