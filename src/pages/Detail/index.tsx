@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, StyleSheet, Animated, Text} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
@@ -96,7 +97,7 @@ class Detail extends React.Component<IProps, IState> {
           barrageData: [{id, title}],
         });
       }
-    }, 1000);
+    }, 500);
   };
 
   toggle = () => {
@@ -139,7 +140,10 @@ class Detail extends React.Component<IProps, IState> {
         <View style={styles.imageView}>
           <Animated.Image
             source={{uri: thumbnailUrl}}
-            style={[styles.image, {transform: [{scale: this.anim}]}]}
+            style={[
+              styles.image,
+              {borderRadius: barrage ? 0 : 8, transform: [{scale: this.anim}]},
+            ]}
           />
         </View>
         {barrage && (
@@ -148,7 +152,11 @@ class Detail extends React.Component<IProps, IState> {
               colors={['rgba(128,104,102,0.5)', '#807c66']}
               style={styles.linear}
             />
-            <Barrage data={barrageData} maxTrack={5} />
+            <Barrage
+              data={barrageData}
+              maxTrack={5}
+              style={{top: PADDING_TOP}}
+            />
           </>
         )}
         <Touchable style={styles.barrageBtn} onPress={this.barrage}>

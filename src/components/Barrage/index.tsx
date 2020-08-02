@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, StyleSheet, StyleProp, ViewStyle} from 'react-native';
 import Item from './Item';
 
 export interface Message {
@@ -9,11 +9,13 @@ export interface Message {
 
 export interface IBarrage extends Message {
   trackIndex: number;
+  isFree?: boolean;
 }
 
 interface IProps {
   data: Message[];
   maxTrack: number;
+  style?: StyleProp<ViewStyle>;
 }
 
 interface IState {
@@ -36,12 +38,17 @@ function addBarrage(data: Message[], maxTrack: number, list: IBarrage[][]) {
     };
     list[trackIndex].push(barrage);
   }
+  return list;
 }
 
 function getTrackIndex(list: IBarrage[][], maxTrack: number) {
   for (let i = 0; i < maxTrack; i++) {
     const barragesOfTrack = list[i];
     if (!barragesOfTrack || barragesOfTrack.length === 0) {
+      return i;
+    }
+    const lastBarragesofTrack = barragesOfTrack[barragesOfTrack.length - 1];
+    if (lastBarragesofTrack.isFree) {
       return i;
     }
   }
@@ -63,17 +70,17 @@ class Barrage extends React.Component<IProps, IState> {
     return null;
   }
 
-  outside = (data: Message) => {
+  outside = (data: IBarrage) => {
     const {list} = this.state;
     const newList = list.slice();
     if (newList.length > 0) {
-      const deleteIndex = newList.indexOf(data);
-      if (deleteIndex > -1) {
-        newList.splice(deleteIndex, 1);
-        this.setState({
-          list: newList,
-        });
-      }
+      const {trackIndex} = data;
+      newList[trackIndex] = newList[trackIndex].filter(
+        (item) => item.id !== data.id,
+      );
+      this.setState({
+        list: newList,
+      });
     }
   };
 
@@ -85,8 +92,16 @@ class Barrage extends React.Component<IProps, IState> {
 
   render() {
     const {list} = this.state;
-    return <View>{list.map(this.renderItem)}</View>;
+    const {style} = this.props;
+    return (
+      <View style={[styles.container, style]}>{list.map(this.renderItem)}</View>
+    );
   }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+  },
+});
 export default Barrage;
