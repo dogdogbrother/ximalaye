@@ -148,7 +148,7 @@ class Detail extends React.Component<IProps, IState> {
               colors={['rgba(128,104,102,0.5)', '#807c66']}
               style={styles.linear}
             />
-            <Barrage data={barrageData} />
+            <Barrage data={barrageData} maxTrack={5} />
           </>
         )}
         <Touchable style={styles.barrageBtn} onPress={this.barrage}>

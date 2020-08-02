@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Text, Animated, Easing} from 'react-native';
 import {viewportWidth} from '@/utils/index';
@@ -29,6 +30,8 @@ class Item extends React.PureComponent<IProps> {
     return (
       <Animated.View
         style={{
+          position: 'absolute',
+          top: Math.random() * 100,
           transform: [
             {
               translateX: this.translateX.interpolate({
