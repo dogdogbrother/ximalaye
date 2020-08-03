@@ -43,7 +43,8 @@
     "react-native-tab-view": "^2.14.4",
     "react-native-tab-view-viewpager-adapter": "^1.1.0",
     "react-navigation-header-buttons": "^4.0.2",
-    "react-redux": "^7.2.0"
+    "react-redux": "^7.2.0",
+    "realm": "^6.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
