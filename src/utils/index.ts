@@ -1,4 +1,5 @@
 import {Dimensions} from 'react-native';
+import {NavigationState} from '@react-navigation/native';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 
@@ -17,4 +18,31 @@ function formatTime(seconds: number) {
   const s = parseInt((seconds % 60) + '', 10);
   return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
 }
-export {viewportWidth, viewportHeight, wp, hp, formatTime};
+
+// 根据当前状态查找当前处于焦点的页面名字
+function findRouteNameFromNavigatorState({routes, index}: NavigationState) {
+  let route = routes[index];
+  while (route.state) {
+    route = route.state.routes[route.state.index];
+  }
+  return route.name;
+}
+
+function getActiveRouteName(state: NavigationState) {
+  let route;
+  route = state.routes[state.index];
+  while (route.state && route.state.index) {
+    route = route.state.routes[route.state.index];
+  }
+  return route.name;
+}
+
+export {
+  viewportWidth,
+  viewportHeight,
+  wp,
+  hp,
+  formatTime,
+  getActiveRouteName,
+  findRouteNameFromNavigatorState,
+};

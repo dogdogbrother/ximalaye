@@ -1,5 +1,9 @@
 import React from 'react';
-import {NavigationContainer, RouteProp} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  RouteProp,
+  NavigationState,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationProp,
@@ -13,6 +17,11 @@ import Category from '@/pages/Category';
 import Album from '@/pages/Album';
 import {Platform, StyleSheet, StatusBar, Animated} from 'react-native';
 import Icon from '@/assets/iconfont/index';
+import PlayView from '@/pages/views/PlayView';
+import {
+  findRouteNameFromNavigatorState,
+  getActiveRouteName,
+} from '../utils/index';
 
 export type RootStackParamList = {
   BottomTabs: {
@@ -157,10 +166,23 @@ function ModalStackScreen() {
 }
 
 class Navigator extends React.Component {
+  state = {
+    routeName: 'Root',
+  };
+  onStateChange = (state: NavigationState | undefined) => {
+    if (typeof state !== 'undefined') {
+      // const routeName = findRouteNameFromNavigatorState(state);
+      const routeName = getActiveRouteName(state);
+      this.setState({
+        routeName,
+      });
+    }
+  };
   render() {
     return (
-      <NavigationContainer>
+      <NavigationContainer onStateChange={this.onStateChange}>
         <ModalStackScreen />
+        <PlayView routeName={this.state.routeName} />
       </NavigationContainer>
     );
   }
