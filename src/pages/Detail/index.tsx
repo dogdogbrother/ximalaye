@@ -33,6 +33,7 @@ function getText() {
 
 const mapStateToProps = ({player}: RootState) => {
   return {
+    id: player.id,
     soundUrl: player.soundUrl,
     playState: player.playState,
     title: player.title,
@@ -66,13 +67,19 @@ class Detail extends React.Component<IProps, IState> {
   };
   anim = new Animated.Value(1);
   componentDidMount() {
-    const {dispatch, route, navigation, title} = this.props;
-    dispatch({
-      type: 'player/fetchShow',
-      payload: {
-        id: route.params.id,
-      },
-    });
+    const {dispatch, route, navigation, title, id} = this.props;
+    if (route.params && route.params.id !== id) {
+      dispatch({
+        type: 'player/fetchShow',
+        payload: {
+          id: route.params.id,
+        },
+      });
+    } else {
+      dispatch({
+        type: 'player/play',
+      });
+    }
     navigation.setOptions({
       headerTitle: title,
     });

@@ -99,11 +99,11 @@ class BottomTabs extends React.Component<IProps> {
         <Tab.Screen
           name="Play"
           component={Play}
-          options={{
+          options={({navigation}) => ({
             tabBarButton: () => {
-              return <Play />;
+              return <Play onPress={() => navigation.navigate('Detail')} />;
             },
-          }}
+          })}
         />
         <Tab.Screen
           name="Found"

@@ -18,10 +18,7 @@ import Album from '@/pages/Album';
 import {Platform, StyleSheet, StatusBar, Animated} from 'react-native';
 import Icon from '@/assets/iconfont/index';
 import PlayView from '@/pages/views/PlayView';
-import {
-  findRouteNameFromNavigatorState,
-  getActiveRouteName,
-} from '../utils/index';
+import {getActiveRouteName, navigationRef} from '../utils/index';
 
 export type RootStackParamList = {
   BottomTabs: {
@@ -180,7 +177,9 @@ class Navigator extends React.Component {
   };
   render() {
     return (
-      <NavigationContainer onStateChange={this.onStateChange}>
+      <NavigationContainer
+        ref={navigationRef}
+        onStateChange={this.onStateChange}>
         <ModalStackScreen />
         <PlayView routeName={this.state.routeName} />
       </NavigationContainer>
