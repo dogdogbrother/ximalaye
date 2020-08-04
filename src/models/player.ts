@@ -10,6 +10,7 @@ import {
   stop,
 } from '@/config/sound';
 import {RootState} from '@/models/index';
+import {saveProgram} from '@/config/realm';
 
 const SHOW_URL = '/mock/11/bear/show';
 
@@ -83,7 +84,7 @@ const playerModel: PlayerModel = {
     },
   },
   effects: {
-    *fetchShow({payload}, {call, put}) {
+    *fetchShow({payload}, {call, put, select}) {
       yield call(stop);
       const {data} = yield call(axios.get, SHOW_URL, {
         params: {id: payload.id},
@@ -97,9 +98,21 @@ const playerModel: PlayerModel = {
           duration: getDuration(),
         },
       });
-
       yield put({
         type: 'play',
+      });
+      const {
+        id,
+        title,
+        thumbnailUrl,
+        currentTime,
+      }: PlayerModelState = yield select(({player}: RootState) => player);
+      saveProgram({
+        id,
+        title,
+        thumbnailUrl,
+        currentTime,
+        duration: getDuration(),
       });
     },
     *play(_, {call, put}) {
@@ -122,7 +135,7 @@ const playerModel: PlayerModel = {
         },
       });
     },
-    *pause(_, {call, put}) {
+    *pause(_, {call, put, select}) {
       yield call(pause);
       yield put({
         type: 'setState',
@@ -130,6 +143,10 @@ const playerModel: PlayerModel = {
           playState: 'paused',
         },
       });
+      const {id, currentTime}: PlayerModelState = yield select(
+        ({player}: RootState) => player,
+      );
+      saveProgram({id, currentTime});
     },
     watcherCurrentTime: [
       function* (sagaEffects) {
@@ -166,7 +183,7 @@ const playerModel: PlayerModel = {
         },
       });
     },
-    *next(_, {call, put, select}) {
+    *next(_, {put, select}) {
       const {id, sounds}: PlayerModelState = yield select(
         ({player}: RootState) => player,
       );
