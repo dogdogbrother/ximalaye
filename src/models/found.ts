@@ -3,6 +3,12 @@ import axios from 'axios';
 
 const FOUND_URL = '/mock/11/bear/found/list';
 
+export interface IFound {
+  id: string;
+  title: string;
+  videoUrl: string;
+}
+
 interface FoundModel extends Model {
   namespace: 'found';
   effects: {
@@ -17,7 +23,7 @@ const foundModel: FoundModel = {
     *fetchList({callback}, {call}) {
       const {data} = yield call(axios.get, FOUND_URL);
       if (typeof callback === 'function') {
-        callback(data);
+        callback(data.data);
       }
     },
   },
