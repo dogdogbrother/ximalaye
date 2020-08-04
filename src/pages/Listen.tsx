@@ -5,12 +5,20 @@ import realm, {IProgram} from '@/config/realm';
 import {FlatList} from 'react-native-gesture-handler';
 import Icon from '@/assets/iconfont/index';
 import {formatTime} from '../utils';
+import Touchable from '@/components/Touchable';
 
 interface IProps {
   navigation: RootStackNavigation;
 }
 
 class Listen extends React.Component<IProps> {
+  delete = (item: IProgram) => {
+    realm.write(() => {
+      const program = realm.objects('Program').filtered(`id='${item.id}'`);
+      realm.delete(program);
+      this.setState({});
+    });
+  };
   renderItem = ({item}: ListRenderItemInfo<IProgram>) => {
     return (
       <View style={styles.item}>
@@ -23,6 +31,13 @@ class Listen extends React.Component<IProps> {
             <Text style={styles.rate}>已播: {item.rate}%</Text>
           </View>
         </View>
+        <Touchable
+          style={styles.deleteBtn}
+          onPress={() => {
+            this.delete(item);
+          }}>
+          <Icon name="iconhome-fill" color="#999" />
+        </Touchable>
       </View>
     );
   };
@@ -63,6 +78,10 @@ const styles = StyleSheet.create({
   rate: {
     marginLeft: 20,
     color: '#f6a624',
+  },
+  deleteBtn: {
+    padding: 10,
+    justifyContent: 'center',
   },
 });
 
