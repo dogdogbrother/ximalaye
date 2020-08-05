@@ -19,6 +19,7 @@ import {Platform, StyleSheet, StatusBar, Animated} from 'react-native';
 import Icon from '@/assets/iconfont/index';
 import PlayView from '@/pages/views/PlayView';
 import {getActiveRouteName, navigationRef} from '../utils/index';
+import Login from '@/pages/Login';
 
 export type RootStackParamList = {
   BottomTabs: {
@@ -118,6 +119,7 @@ export type ModalStackParamList = {
   Detail: {
     id: string;
   };
+  Login: undefined;
 };
 
 const ModalStack = createStackNavigator<ModalStackParamList>();
@@ -134,6 +136,7 @@ function ModalStackScreen() {
         gestureEnabled: true,
         ...TransitionPresets.ModalSlideFromBottomIOS,
         headerBackTitleVisible: false,
+        headerTintColor: '#333',
       }}>
       <ModalStack.Screen
         name="Root"
@@ -157,6 +160,11 @@ function ModalStackScreen() {
             />
           ),
         }}
+      />
+      <ModalStack.Screen
+        name="Login"
+        component={Login}
+        options={{headerTitle: '登陆'}}
       />
     </ModalStack.Navigator>
   );
