@@ -42,16 +42,19 @@ const userModel: UserModel = {
   },
   effects: {
     *login({payload}, {call, put}) {
-      const {data, status, msg} = yield call(axios.post, USER_URL, payload);
-      if (status === 100) {
+      const res = yield call(axios.post, USER_URL, payload);
+      const {data, status, msg} = res.data;
+      console.log(status);
+      if (status === 300) {
         yield put({
           type: 'setState',
           payload: {
             user: data,
           },
         });
+        alert('邓丽成功');
       } else {
-        console.log(msg);
+        // console.log(msg);
       }
     },
     *logout(_, {ptu}) {
