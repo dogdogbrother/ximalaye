@@ -1,7 +1,8 @@
-import {Model, Effect} from 'dva-core-ts';
+import {Model, Effect, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
 import {goBack} from '@/utils/index';
+import storage, {load} from '@/config/storage';
 
 const USER_URL = '/mock/11/bear/login';
 
@@ -20,10 +21,12 @@ export interface UserModel extends Model {
   effects: {
     login: Effect;
     logout: Effect;
+    loadStorage: Effect;
   };
   reducers: {
     setState: Reducer<UserModelState>;
   };
+  subscriptions: SubscriptionsMapObject;
 }
 
 const initalState = {
@@ -45,7 +48,6 @@ const userModel: UserModel = {
     *login({payload}, {call, put}) {
       const res = yield call(axios.post, USER_URL, payload);
       const {data, status, msg} = res.data;
-      console.log(status);
       if (status === 300) {
         yield put({
           type: 'setState',
@@ -53,17 +55,45 @@ const userModel: UserModel = {
             user: data,
           },
         });
+        storage.save({
+          key: 'user',
+          data,
+        });
         goBack();
       } else {
         console.log(msg);
       }
     },
-    *logout(_, {ptu}) {
-      yield ptu({
+    *logout(_, {put}) {
+      yield put({
         type: 'setState',
         payload: {
           user: undefined,
         },
+      });
+      storage.save({
+        key: 'user',
+        data: null,
+      });
+    },
+    *loadStorage(_, {call, put}) {
+      try {
+        const user = yield call(load, {key: 'user'});
+        yield put({
+          type: 'setState',
+          payload: {
+            user,
+          },
+        });
+      } catch (error) {
+        console.log('保存用户信息错误', error);
+      }
+    },
+  },
+  subscriptions: {
+    setup({dispatch}) {
+      dispatch({
+        type: 'loadStorage',
       });
     },
   },
