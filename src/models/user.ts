@@ -1,6 +1,7 @@
 import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
+import {goBack} from '@/utils/index';
 
 const USER_URL = '/mock/11/bear/login';
 
@@ -52,6 +53,7 @@ const userModel: UserModel = {
             user: data,
           },
         });
+        goBack();
       } else {
         console.log(msg);
       }

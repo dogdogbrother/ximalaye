@@ -47,6 +47,10 @@ function navigate(name: string, params?: any) {
   navigationRef.current?.navigate(name, params);
 }
 
+function goBack() {
+  navigationRef.current?.goBack();
+}
+
 export {
   viewportWidth,
   viewportHeight,
@@ -57,4 +61,5 @@ export {
   findRouteNameFromNavigatorState,
   navigationRef,
   navigate,
+  goBack,
 };

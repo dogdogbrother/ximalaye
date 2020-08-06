@@ -1,11 +1,11 @@
 import React from 'react';
 import {ScrollView, Text, View, StyleSheet} from 'react-native';
-import {Formik} from 'formik';
-import {TextInput} from 'react-native-gesture-handler';
+import {Formik, Field} from 'formik';
 import Touchable from '@/components/Touchable';
 import {RootState} from '../models/index';
 import {connect, ConnectedProps} from 'react-redux';
 import * as Yup from 'yup';
+import Input from '@/components/Input';
 
 interface Values {
   account: string;
@@ -47,24 +47,22 @@ class Login extends React.Component<ModelState> {
           validationSchema={validationSchema}
           initialValues={initialValues}
           onSubmit={this.onSubmit}>
-          {({values, handleChange, handleBlur, handleSubmit, errors}) => {
+          {({handleSubmit}) => {
             return (
               <View>
-                <TextInput
-                  onChangeText={handleChange('account')}
-                  onBlur={handleBlur('account')}
-                  value={values.account}
+                <Field
+                  placeholder="请输入账号"
+                  name="account"
+                  component={Input}
                 />
-                {errors.account && <Text>{errors.account}</Text>}
-                <TextInput
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  value={values.password}
+                <Field
+                  placeholder="请输入密码"
+                  name="password"
+                  component={Input}
                   secureTextEntry
                 />
-                {errors.password && <Text>{errors.password}</Text>}
-                <Touchable onPress={handleSubmit}>
-                  <Text>登陆</Text>
+                <Touchable onPress={handleSubmit} style={styles.loginBtn}>
+                  <Text style={styles.loginBtnText}>登陆</Text>
                 </Touchable>
               </View>
             );
@@ -82,6 +80,21 @@ const styles = StyleSheet.create({
     fontSize: 50,
     textAlign: 'center',
     marginTop: 40,
+  },
+  loginBtn: {
+    marginTop: 40,
+    margin: 10,
+    height: 40,
+    borderRadius: 20,
+    borderColor: '#ff4000',
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginBtnText: {
+    color: '#ff4000',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 
