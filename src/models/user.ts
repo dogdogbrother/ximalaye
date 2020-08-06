@@ -52,9 +52,8 @@ const userModel: UserModel = {
             user: data,
           },
         });
-        alert('邓丽成功');
       } else {
-        // console.log(msg);
+        console.log(msg);
       }
     },
     *logout(_, {ptu}) {

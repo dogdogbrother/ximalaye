@@ -47,7 +47,8 @@
     "react-native-video-custom-controls": "^0.1.0",
     "react-navigation-header-buttons": "^4.0.2",
     "react-redux": "^7.2.0",
-    "realm": "^6.0.3"
+    "realm": "^6.0.3",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
@@ -58,6 +59,7 @@
     "@types/react-native-snap-carousel": "^3.8.1",
     "@types/react-native-video": "^5.0.1",
     "@types/react-test-renderer": "16.9.2",
+    "@types/yup": "^0.29.4",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
     "babel-jest": "^24.9.0",
