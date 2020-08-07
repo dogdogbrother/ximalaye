@@ -1,6 +1,7 @@
 import {Model, Effect, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import axios from 'axios';
+import Toast from 'react-native-root-toast';
 import {goBack} from '@/utils/index';
 import storage, {load} from '@/config/storage';
 
@@ -61,7 +62,12 @@ const userModel: UserModel = {
         });
         goBack();
       } else {
-        console.log(msg);
+        Toast.show(msg, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.CENTER,
+          shadow: true,
+          animation: true,
+        });
       }
     },
     *logout(_, {put}) {
