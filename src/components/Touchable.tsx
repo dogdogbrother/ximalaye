@@ -1,4 +1,4 @@
-import React, {us} from 'react';
+import React from 'react';
 import {
   TouchableOpacity,
   TouchableOpacityProps,
